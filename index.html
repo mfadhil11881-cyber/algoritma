@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyek: Distribusi Frekuensi - Dengan Foto Kelompok</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Variabel warna default - akan diubah oleh JavaScript */
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4ade80;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.8s;
+            --border-radius: 12px;
+        }
+
+        /* Animasi perubahan warna */
+        * {
+            transition: background-color var(--transition-speed) ease,
+                        color var(--transition-speed) ease,
+                        border-color var(--transition-speed) ease,
+                        box-shadow var(--transition-speed) ease,
+                        transform var(--transition-speed) ease;
+        }
+
+        /* Reset dan gaya dasar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--light-color) 0%, #e2e8f0 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 50px;
+            overflow-x: hidden;
+        }
+
+        /* Background animasi dengan warna dinamis */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+            filter: hue-rotate(0deg);
+            animation: float 20s infinite linear, hueRotate 30s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        @keyframes hueRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        /* Kontainer utama */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header dengan foto kelompok */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: headerColorShift 20s infinite alternate;
+        }
+
+        @keyframes headerColorShift {
+            0% { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+            25% { background: linear-gradient(135deg, #ef4444, #dc2626); }
+            50% { background: linear-gradient(135deg, #10b981, #059669); }
+            75% { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+            100% { background: linear-gradient(135deg, #f97316, #ea580c); }
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shine 3s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-text h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: textColorShift 15s infinite alternate;
+        }
+
+        @keyframes textColorShift {
+            0% { color: white; }
+            25% { color: #fecaca; }
+            50% { color: #bbf7d0; }
+            75% { color: #ddd6fe; }
+            100% { color: #fed7aa; }
+        }
+
+        .header-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        /* Indikator warna otomatis */
+        .color-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            animation: dotPulse 2s infinite alternate;
+        }
+
+        @keyframes dotPulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.3); opacity: 1; }
+        }
+
+        .color-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Kontrol warna otomatis */
+        .auto-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .auto-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .auto-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .auto-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Foto kelompok di header */
+        .team-photo-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .team-photo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            position: relative;
+            height: 180px;
+        }
+
+        .team-member-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            transition: all 0.5s ease;
+            z-index: 1;
+        }
+
+        .team-member-photo:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* POSISI UNTUK 4 FOTO SAJA */
+        .team-member-photo:nth-child(1) {
+            transform: translateX(-60px);
+        }
+
+        .team-member-photo:nth-child(2) {
+            transform: translateX(-20px);
+        }
+
+        .team-member-photo:nth-child(3) {
+            transform: translateX(20px);
+        }
+
+        .team-member-photo:nth-child(4) {
+            transform: translateX(60px);
+        }
+
+        .team-photo:hover .team-member-photo:nth-child(1) {
+            transform: translateX(-80px) scale(1.1);
+        }
+
+        .team-photo:hover .team-member-photo:nth-child(2) {
+            transform: translateX(-30px) scale(1.1);
+        }
+
+        .team-photo:hover .team-member-photo:nth-child(3) {
+            transform: translateX(30px) scale(1.1);
+        }
+
+        .team-photo:hover .team-member-photo:nth-child(4) {
+            transform: translateX(80px) scale(1.1);
+        }
+
+        .team-names {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .team-name-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .team-name-tag:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Kartu informasi proyek */
+        .project-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            border-left: 6px solid var(--accent-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            backdrop-filter: blur(10px);
+            animation: cardColorShift 25s infinite alternate;
+        }
+
+        @keyframes cardColorShift {
+            0% { border-left-color: var(--accent-color); }
+            33% { border-left-color: var(--success-color); }
+            66% { border-left-color: var(--warning-color); }
+            100% { border-left-color: var(--danger-color); }
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-color);
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card h3 i {
+            font-size: 1.2rem;
+            animation: iconColorShift 20s infinite alternate;
+        }
+
+        @keyframes iconColorShift {
+            0% { color: var(--primary-color); }
+            25% { color: #ef4444; }
+            50% { color: #10b981; }
+            75% { color: #8b5cf6; }
+            100% { color: #f97316; }
+        }
+
+        .info-card p {
+            margin-bottom: 8px;
+            color: var(--dark-color);
+        }
+
+        /* Bagian foto kelompok detail */
+        .team-detail-section {
+            grid-column: span 2;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .team-detail-section {
+                grid-column: span 1;
+            }
+        }
+
+        .team-detail-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .team-detail-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .team-members-detail {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .team-member-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            text-align: center;
+            position: relative;
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-photo-container {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .member-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .team-member-card:hover .member-photo {
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            padding: 20px;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .member-nim {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .member-role {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            background: var(--secondary-color);
+        }
+
+        /* Konten utama */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Kartu dengan efek warna berubah */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 8px 25px var(--shadow-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+            animation: cardBorderColorShift 30s infinite alternate;
+        }
+
+        @keyframes cardBorderColorShift {
+            0% { border-color: rgba(255, 255, 255, 0.1); }
+            25% { border-color: rgba(239, 68, 68, 0.2); }
+            50% { border-color: rgba(16, 185, 129, 0.2); }
+            75% { border-color: rgba(139, 92, 246, 0.2); }
+            100% { border-color: rgba(249, 115, 22, 0.2); }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 i {
+            font-size: 1.4rem;
+        }
+
+        /* Input section */
+        .input-section textarea {
+            width: 100%;
+            height: 150px;
+            padding: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: vertical;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-section textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+
+        .data-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group input, .control-group select {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark-color);
+            transition: border-color 0.3s;
+        }
+
+        .control-group input:focus, .control-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Tombol dengan efek warna berubah */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: btnColorShift 25s infinite alternate;
+        }
+
+        @keyframes btnColorShift {
+            0% { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+            25% { background: linear-gradient(135deg, #ef4444, #dc2626); }
+            50% { background: linear-gradient(135deg, #10b981, #059669); }
+            75% { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+            100% { background: linear-gradient(135deg, #f97316, #ea580c); }
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.2);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--success-color), #22c55e);
+            color: white;
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
+        }
+
+        .sample-data {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .sample-data a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .sample-data a:hover {
+            text-decoration: underline;
+            color: var(--primary-color);
+        }
+
+        /* Alert dengan efek warna */
+        .alert {
+            padding: 18px 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.5s ease-out, alertColorShift 20s infinite alternate;
+        }
+
+        @keyframes alertColorShift {
+            0% { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+            33% { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+            66% { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+            100% { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-left: 5px solid #10b981;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #7f1d1d;
+            border-left: 5px solid #ef4444;
+        }
+
+        /* Algorithm section */
+        .algorithm-info {
+            background: rgba(76, 201, 240, 0.1);
+            padding: 22px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid var(--accent-color);
+            animation: algorithmBorderShift 30s infinite alternate;
+        }
+
+        @keyframes algorithmBorderShift {
+            0% { border-left-color: var(--accent-color); }
+            25% { border-left-color: #ef4444; }
+            50% { border-left-color: #10b981; }
+            75% { border-left-color: #8b5cf6; }
+            100% { border-left-color: #f97316; }
+        }
+
+        .algorithm-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .algorithm-info ol {
+            padding-left: 20px;
+        }
+
+        .algorithm-info li {
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        /* Data summary dengan efek warna */
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--accent-color);
+            transition: transform 0.3s;
+            animation: summaryBorderShift 25s infinite alternate;
+        }
+
+        @keyframes summaryBorderShift {
+            0% { border-top-color: var(--accent-color); }
+            25% { border-top-color: #ef4444; }
+            50% { border-top-color: #10b981; }
+            75% { border-top-color: #8b5cf6; }
+            100% { border-top-color: #f97316; }
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card h4 {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            animation: numberColorShift 20s infinite alternate;
+        }
+
+        @keyframes numberColorShift {
+            0% { color: var(--primary-color); }
+            25% { color: #ef4444; }
+            50% { color: #10b981; }
+            75% { color: #8b5cf6; }
+            100% { color: #f97316; }
+        }
+
+        /* Results section */
+        .results-section {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 1100px) {
+            .results-section {
+                grid-column: span 1;
+            }
+        }
+
+        .results-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Tabel dengan efek warna pada header */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        table th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            padding: 18px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            animation: tableHeaderShift 25s infinite alternate;
+        }
+
+        @keyframes tableHeaderShift {
+            0% { background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); }
+            25% { background: linear-gradient(135deg, #ef4444, #dc2626); }
+            50% { background: linear-gradient(135deg, #10b981, #059669); }
+            75% { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+            100% { background: linear-gradient(135deg, #f97316, #ea580c); }
+        }
+
+        table td {
+            padding: 16px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            color: var(--dark-color);
+        }
+
+        table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        table tr:hover {
+            background-color: rgba(76, 201, 240, 0.1);
+        }
+
+        /* Visualization */
+        .visualization {
+            margin-top: 35px;
+        }
+
+        .chart-container {
+            height: 320px;
+            margin-top: 25px;
+            position: relative;
+        }
+
+        .download-section {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        /* Footer dengan efek warna */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            animation: footerColorShift 30s infinite alternate;
+        }
+
+        @keyframes footerColorShift {
+            0% { border-top-color: rgba(0, 0, 0, 0.1); }
+            25% { border-top-color: rgba(239, 68, 68, 0.2); }
+            50% { border-top-color: rgba(16, 185, 129, 0.2); }
+            75% { border-top-color: rgba(139, 92, 246, 0.2); }
+            100% { border-top-color: rgba(249, 115, 22, 0.2); }
+        }
+
+        /* Animasi untuk angka yang berubah */
+        .counting {
+            animation: countUp 1s ease-out;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mode responsif untuk 4 foto */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-text h1 {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+            
+            .team-photo {
+                height: 140px;
+                margin-top: 20px;
+            }
+            
+            .team-member-photo {
+                width: 90px;
+                height: 90px;
+            }
+            
+            /* POSISI UNTUK 4 FOTO DI MOBILE */
+            .team-member-photo:nth-child(1) {
+                transform: translateX(-45px);
+            }
+            
+            .team-member-photo:nth-child(2) {
+                transform: translateX(-15px);
+            }
+            
+            .team-member-photo:nth-child(3) {
+                transform: translateX(15px);
+            }
+            
+            .team-member-photo:nth-child(4) {
+                transform: translateX(45px);
+            }
+            
+            .team-photo:hover .team-member-photo:nth-child(1) {
+                transform: translateX(-60px) scale(1.1);
+            }
+            
+            .team-photo:hover .team-member-photo:nth-child(2) {
+                transform: translateX(-20px) scale(1.1);
+            }
+            
+            .team-photo:hover .team-member-photo:nth-child(3) {
+                transform: translateX(20px) scale(1.1);
+            }
+            
+            .team-photo:hover .team-member-photo:nth-child(4) {
+                transform: translateX(60px) scale(1.1);
+            }
+            
+            .main-content {
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .team-members-detail {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Efek partikel dengan warna berubah */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--accent-color);
+            opacity: 0.3;
+            animation: particleMove 15s infinite linear, particleColorShift 20s infinite linear;
+        }
+
+        @keyframes particleMove {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-100vh) translateX(100px); }
+        }
+
+        @keyframes particleColorShift {
+            0% { background-color: var(--accent-color); }
+            25% { background-color: #ef4444; }
+            50% { background-color: #10b981; }
+            75% { background-color: #8b5cf6; }
+            100% { background-color: #f97316; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background animasi -->
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <!-- Partikel bergerak -->
+    <div class="particles" id="particlesContainer"></div>
+    
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Proyek Distribusi Frekuensi</h1>
+                    <p>Algoritma dan Pemrograman - Kelompok Algoritma Pemrograman</p>
+                    
+                    <div class="color-indicator">
+                        <div class="color-dot"></div>
+                        <div class="color-text" id="colorStatus"></div>
+                    </div>
+                    
+                    <div class="auto-controls">
+                        <button class="auto-btn active" id="autoMode">
+                            <i class="fas fa-robot"></i> Mode Otomatis: ON
+                        </button>
+                        <button class="auto-btn" id="randomMode">
+                            <i class="fas fa-random"></i> Mode Random
+                        </button>
+                        <button class="auto-btn" id="speedUp">
+                            <i class="fas fa-tachometer-alt"></i> Percepat
+                        </button>
+                        <button class="auto-btn" id="speedDown">
+                            <i class="fas fa-slow-motion"></i> Perlambat
+                        </button>
+                    </div>
+                    
+                    <!-- Foto kelompok di header -->
+                    <div class="team-photo">
+                        <img src="fotofadhil2.jpeg" alt="Muhammad Fadhil" class="team-member-photo">
+                        <img src="fotojulio3.jpeg" alt="Juliotama Sitepubudy" class="team-member-photo">
+                        <img src="fotomaulana.jpeg" alt="Maulana Akbar" class="team-member-photo">
+                        <img src="fotorestu.jpg" alt="Restu Habibie" class="team-member-photo">
+                    </div>
+                        
+                    <div class="team-names">
+                        <div class="team-name-tag">Muhammad Fadhil - Ketua dan Programmer</div>
+                        <div class="team-name-tag">Juliotama Sitepubudy - Programmer</div>
+                        <div class="team-name-tag">Maulana Akbar Said - Analis Data</div>
+                        <div class="team-name-tag">Restu Habibie - Dokumentasi</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="project-info">
+            <div class="info-card">
+                <h3><i class="fas fa-bullseye"></i> Tujuan Pembelajaran</h3>
+                <p>1. Memahami konsep distribusi frekuensi dalam statistika</p>
+                <p>2. Merancang algoritma untuk mengolah data numerik</p>
+                <p>3. Mengimplementasikan algoritma distribusi frekuensi</p>
+                <p>4. Menjelaskan alur logika program secara sistematis</p>
+            </div>
+        </div>
+        
+        <!-- Detail anggota kelompok -->
+        <div class="team-detail-section">
+            <div class="team-detail-card">
+                <h2><i class="fas fa-users"></i> Detail Anggota Kelompok</h2>
+                <div class="team-members-detail">
+                    <div class="team-member-card">
+                        <div class="member-photo-container">
+                            <img src="fotofadhil2.jpeg" alt="Muhammad Fadhil" class="member-photo">
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">Muhammad Fadhil</div>
+                            <div class="member-nim">NIM: 4253550018</div>
+                            <div class="member-role">Ketua Kelompok dan Programmer</div>
+                            <div class="member-bio">Bertanggung jawab atas perancangan algoritma dan koordinasi kelompok. Memiliki minat dalam analisis data dan visualisasi.</div>
+                            <div class="member-social">
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member-card">
+                        <div class="member-photo-container">
+                            <img src="fotojulio3.jpeg" alt="Juliotama Sitepubudy" class="member-photo">
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">Juliotama Sitepubudy</div>
+                            <div class="member-nim">NIM: 4253550030</div>
+                            <div class="member-role">Programmer</div>
+                            <div class="member-bio">Bertanggung jawab atas implementasi algoritma ke dalam kode program. Ahli dalam JavaScript, Python, dan analisis data.</div>
+                            <div class="member-social">
+                                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-code"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member-card">
+                        <div class="member-photo-container">
+                            <img src="fotomaulana.jpeg" alt="Maulana Akbar Said" class="member-photo">
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">Maulana Akbar Said Hasugian</div>
+                            <div class="member-nim">NIM: 4252550012</div>
+                            <div class="member-role">Analis Data</div>
+                            <div class="member-bio">Bertanggung jawab atas pengolahan data, analisis statistika, dan interpretasi hasil. Memiliki ketelitian tinggi dalam bekerja dengan data.</div>
+                            <div class="member-social">
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-chart-bar"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member-card">
+                        <div class="member-photo-container">
+                            <img src="fotorestu.jpg" alt="Restu Habibie" class="member-photo">
+                        </div>
+                        <div class="member-info">
+                            <div class="member-name">Restu Habibie</div>
+                            <div class="member-nim">NIM: 4253250024</div>
+                            <div class="member-role">Dokumentasi</div>
+                            <div class="member-bio">Bertanggung jawab atas dokumentasi proyek, pembuatan laporan, dan penyusunan presentasi. Memiliki kemampuan komunikasi yang baik.</div>
+                            <div class="member-social">
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-file-alt"></i></a>
+                                <a href="#" class="social-icon"><i class="fas fa-video"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Penutup team-members-detail -->
+            </div> <!-- Penutup team-detail-card -->
+        </div> <!-- Penutup team-detail-section -->
+        
+        <div class="alert alert-success" id="successAlert">
+            <i class="fas fa-check-circle"></i>
+            <span id="alertMessage">Distribusi frekuensi berhasil dihitung!</span>
+        </div>
+        
+        <div class="alert alert-error" id="errorAlert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorMessage">Terjadi kesalahan. Pastikan data yang dimasukkan valid dan jumlah data minimal 30.</span>
+        </div>
+        
+        <div class="main-content">
+            <div class="card input-section">
+                <h2><i class="fas fa-database"></i> Input Data</h2>
+                <p>Masukkan data numerik (pisahkan dengan koma, spasi, atau baris baru):</p>
+                <textarea id="dataInput" placeholder="Contoh: 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110">65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135</textarea>
+                
+                <div class="data-controls">
+                    <div class="control-group">
+                        <label for="dataType"><i class="fas fa-filter"></i> Jenis Data:</label>
+                        <select id="dataType">
+                            <option value="nilai">Nilai Mahasiswa</option>
+                            <option value="tinggi">Tinggi Badan (cm)</option>
+                            <option value="berat">Berat Badan (kg)</option>
+                            <option value="penjualan">Jumlah Penjualan</option>
+                            <option value="custom">Data Kustom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="classMethod"><i class="fas fa-calculator"></i> Metode Penentuan Kelas:</label>
+                        <select id="classMethod">
+                            <option value="sturges">Aturan Sturges</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="manualClassGroup" style="display:none;">
+                        <label for="classCount"><i class="fas fa-layer-group"></i> Jumlah Kelas (k):</label>
+                        <input type="number" id="classCount" min="2" max="20" value="5">
+                    </div>
+                </div>
+                
+                <div class="sample-data">
+                    <p>Contoh dataset: <a href="#" id="loadSampleData"><i class="fas fa-download"></i> Muat data contoh (35 data nilai mahasiswa)</a></p>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" id="calculateBtn">
+                        <i class="fas fa-calculator"></i> Hitung Distribusi Frekuensi
+                    </button>
+                    <button class="btn btn-secondary" id="generateData">
+                        <i class="fas fa-random"></i> Generate Data Acak
+                    </button>
+                    <button class="btn btn-reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset Data
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card algorithm-section">
+                <h2><i class="fas fa-project-diagram"></i> Algoritma Distribusi Frekuensi</h2>
+                <div class="algorithm-info">
+                    <h3>Langkah-langkah algoritma:</h3>
+                    <ol>
+                        <li><strong>Input data</strong> - Menerima data numerik dari pengguna</li>
+                        <li><strong>Menentukan jumlah kelas (k)</strong> - Menggunakan aturan Sturges: k = 1 + 3.3 * log(n)</li>
+                        <li><strong>Menentukan interval kelas (c)</strong> - c = (max - min) / k</li>
+                        <li><strong>Menyusun tabel distribusi frekuensi</strong> - Menghitung frekuensi data pada setiap interval kelas</li>
+                        <li><strong>Menampilkan hasil</strong> - Tabel distribusi frekuensi dan visualisasi</li>
+                    </ol>
+                </div>
+                
+                <div class="data-summary" id="dataSummary">
+                    <div class="summary-card">
+                        <h4>Jumlah Data (n)</h4>
+                        <p id="dataCount" class="counting">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Rentang Data</h4>
+                        <p id="dataRange" class="counting">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Jumlah Kelas (k)</h4>
+                        <p id="classSummary" class="counting">0</p>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Interval Kelas (c)</h4>
+                        <p id="intervalSummary" class="counting">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card results-section">
+                <h2><i class="fas fa-chart-bar"></i> Hasil Distribusi Frekuensi</h2>
+                
+                <div class="results-container">
+                    <table id="frequencyTable">
+                        <thead>
+                            <tr>
+                                <th>Kelas</th>
+                                <th>Interval</th>
+                                <th>Nilai Tengah</th>
+                                <th>Frekuensi</th>
+                                <th>Frekuensi Relatif (%)</th>
+                                <th>Frekuensi Kumulatif</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 40px;">
+                                    <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px; display: block;"></i>
+                                    Data belum dihitung. Masukkan data dan klik "Hitung Distribusi Frekuensi".
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="visualization">
+                    <h3><i class="fas fa-chart-pie"></i> Visualisasi Data</h3>
+                    <div class="chart-container">
+                        <canvas id="frequencyChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="download-section">
+                    <button class="btn download-btn" id="exportTable">
+                        <i class="fas fa-file-csv"></i> Export Tabel ke CSV
+                    </button>
+                    <button class="btn download-btn" id="exportData">
+                        <i class="fas fa-file-alt"></i> Export Data ke TXT
+                    </button>
+                    <button class="btn btn-primary" id="screenshotBtn">
+                        <i class="fas fa-camera"></i> Ambil Screenshot
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Proyek Algoritma dan Pemrograman - Distribusi Frekuensi pada Statistika</p>
+            <p>© 2025 - Dibuat oleh Kelompok <strong>Algoritma Pemrograman</strong></p>
+            <p>Dosen Pengampu: <strong>Dr. Surya Wijaya, M.Kom.</strong></p>
+            <p>Mata Kuliah: <strong>Algoritma dan Pemrograman</strong> | Universitas Teknologi Indonesia</p>
+            <p style="margin-top: 15px; font-size: 0.8rem;">
+                <i class="fas fa-magic" style="color: var(--accent-color);"></i> 
+                Warna berubah otomatis setiap <span id="changeInterval">5</span> detik
+            </p>
+        </footer>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- HTML2Canvas untuk screenshot -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+        // Elemen DOM
+        const dataInput = document.getElementById('dataInput');
+        const dataType = document.getElementById('dataType');
+        const classMethod = document.getElementById('classMethod');
+        const manualClassGroup = document.getElementById('manualClassGroup');
+        const classCount = document.getElementById('classCount');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const generateDataBtn = document.getElementById('generateData');
+        const resetBtn = document.getElementById('resetBtn');
+        const loadSampleData = document.getElementById('loadSampleData');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const dataSummary = document.getElementById('dataSummary');
+        const tableBody = document.getElementById('tableBody');
+        const dataCountEl = document.getElementById('dataCount');
+        const dataRangeEl = document.getElementById('dataRange');
+        const classSummaryEl = document.getElementById('classSummary');
+        const intervalSummaryEl = document.getElementById('intervalSummary');
+        const exportTableBtn = document.getElementById('exportTable');
+        const exportDataBtn = document.getElementById('exportData');
+        const screenshotBtn = document.getElementById('screenshotBtn');
+        const autoModeBtn = document.getElementById('autoMode');
+        const randomModeBtn = document.getElementById('randomMode');
+        const speedUpBtn = document.getElementById('speedUp');
+        const speedDownBtn = document.getElementById('speedDown');
+        const colorStatus = document.getElementById('colorStatus');
+        const changeIntervalEl = document.getElementById('changeInterval');
+        const bgAnimation = document.getElementById('bgAnimation');
+        const particlesContainer = document.getElementById('particlesContainer');
+        
+        // Variabel global
+        let currentData = [];
+        let frequencyResult = null;
+        let frequencyChart = null;
+        let colorChangeInterval = null;
+        let currentColorIndex = 0;
+        let changeSpeed = 5000; // 5 detik
+        let isAutoMode = true;
+        let isRandomMode = false;
+        
+        // Daftar tema warna untuk perubahan otomatis
+        const colorThemes = [
+            { 
+                name: "Biru",
+                primary: "#4361ee",
+                secondary: "#3a0ca3",
+                accent: "#4cc9f0",
+                light: "#f8f9fa"
+            },
+            { 
+                name: "Merah",
+                primary: "#ef4444",
+                secondary: "#dc2626",
+                accent: "#f87171",
+                light: "#fef2f2"
+            },
+            { 
+                name: "Hijau",
+                primary: "#10b981",
+                secondary: "#059669",
+                accent: "#34d399",
+                light: "#f0fdf4"
+            },
+            { 
+                name: "Ungu",
+                primary: "#8b5cf6",
+                secondary: "#7c3aed",
+                accent: "#a78bfa",
+                light: "#faf5ff"
+            },
+            { 
+                name: "Oranye",
+                primary: "#f97316",
+                secondary: "#ea580c",
+                accent: "#fb923c",
+                light: "#fff7ed"
+            },
+            { 
+                name: "Pink",
+                primary: "#ec4899",
+                secondary: "#db2777",
+                accent: "#f472b6",
+                light: "#fdf2f8"
+            },
+            { 
+                name: "Cyan",
+                primary: "#06b6d4",
+                secondary: "#0891b2",
+                accent: "#22d3ee",
+                light: "#ecfeff"
+            },
+            { 
+                name: "Emas",
+                primary: "#f59e0b",
+                secondary: "#d97706",
+                accent: "#fbbf24",
+                light: "#fffbeb"
+            }
+        ];
+        
+        // Inisialisasi background animasi
+        function initBackgroundAnimation() {
+            // Hapus bentuk yang ada
+            bgAnimation.innerHTML = '';
+            
+            // Buat bentuk melayang
+            for (let i = 0; i < 8; i++) {
+                const shape = document.createElement('div');
+                shape.className = 'floating-shape';
+                shape.style.width = `${Math.random() * 200 + 50}px`;
+                shape.style.height = shape.style.width;
+                shape.style.left = `${Math.random() * 100}%`;
+                shape.style.top = `${Math.random() * 100}%`;
+                shape.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                shape.style.animationDelay = `${Math.random() * 5}s`;
+                bgAnimation.appendChild(shape);
+            }
+        }
+        
+        // Inisialisasi partikel
+        function initParticles() {
+            particlesContainer.innerHTML = '';
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = `${Math.random() * 5 + 2}px`;
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Fungsi untuk mengubah tema warna
+        function changeColorTheme() {
+            let theme;
+            
+            if (isRandomMode) {
+                // Mode random: pilih tema secara acak
+                const randomIndex = Math.floor(Math.random() * colorThemes.length);
+                theme = colorThemes[randomIndex];
+                currentColorIndex = randomIndex;
+            } else {
+                // Mode otomatis: urut berurutan
+                theme = colorThemes[currentColorIndex];
+                currentColorIndex = (currentColorIndex + 1) % colorThemes.length;
+            }
+            
+            // Update variabel CSS
+            document.documentElement.style.setProperty('--primary-color', theme.primary);
+            document.documentElement.style.setProperty('--secondary-color', theme.secondary);
+            document.documentElement.style.setProperty('--accent-color', theme.accent);
+            document.documentElement.style.setProperty('--light-color', theme.light);
+            
+            // Update status
+            colorStatus.textContent = `Tema: ${theme.name} | Berubah otomatis setiap ${changeSpeed/1000} detik`;
+            
+            // Update chart jika ada
+            if (frequencyChart) {
+                updateChartColors();
+            }
+        }
+        
+        // Fungsi untuk memulai perubahan warna otomatis
+        function startAutoColorChange() {
+            // Hentikan interval sebelumnya jika ada
+            if (colorChangeInterval) {
+                clearInterval(colorChangeInterval);
+            }
+            
+            // Mulai interval baru
+            colorChangeInterval = setInterval(changeColorTheme, changeSpeed);
+            
+            // Langsung ubah warna pertama kali
+            changeColorTheme();
+        }
+        
+        // Fungsi untuk mengatur kecepatan perubahan
+        function setChangeSpeed(newSpeed) {
+            changeSpeed = newSpeed;
+            changeIntervalEl.textContent = changeSpeed / 1000;
+            
+            // Restart interval dengan kecepatan baru
+            if (colorChangeInterval) {
+                clearInterval(colorChangeInterval);
+                colorChangeInterval = setInterval(changeColorTheme, changeSpeed);
+            }
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSampleDataset();
+            initBackgroundAnimation();
+            initParticles();
+            
+            // Mulai perubahan warna otomatis
+            startAutoColorChange();
+            
+            setTimeout(() => {
+                calculateFrequencyDistribution();
+            }, 1000);
+        });
+        
+        // Event listener untuk kontrol mode warna
+        autoModeBtn.addEventListener('click', function() {
+            isAutoMode = true;
+            isRandomMode = false;
+            autoModeBtn.classList.add('active');
+            randomModeBtn.classList.remove('active');
+            colorStatus.textContent = `Mode: Otomatis (berurutan) | Berubah setiap ${changeSpeed/1000} detik`;
+            startAutoColorChange();
+        });
+        
+        randomModeBtn.addEventListener('click', function() {
+            isAutoMode = false;
+            isRandomMode = true;
+            randomModeBtn.classList.add('active');
+            autoModeBtn.classList.remove('active');
+            colorStatus.textContent = `Mode: Random (acak) | Berubah setiap ${changeSpeed/1000} detik`;
+            startAutoColorChange();
+        });
+        
+        speedUpBtn.addEventListener('click', function() {
+            if (changeSpeed > 1000) {
+                setChangeSpeed(changeSpeed - 1000);
+                colorStatus.textContent = `Percepat: ${changeSpeed/1000} detik per perubahan`;
+                showAlert(successAlert, `Kecepatan perubahan warna ditingkatkan: ${changeSpeed/1000} detik`);
+            }
+        });
+        
+        speedDownBtn.addEventListener('click', function() {
+            if (changeSpeed < 10000) {
+                setChangeSpeed(changeSpeed + 1000);
+                colorStatus.textContent = `Perlambat: ${changeSpeed/1000} detik per perubahan`;
+                showAlert(successAlert, `Kecepatan perubahan warna diperlambat: ${changeSpeed/1000} detik`);
+            }
+        });
+        
+        classMethod.addEventListener('change', function() {
+            if (this.value === 'manual') {
+                manualClassGroup.style.display = 'flex';
+            } else {
+                manualClassGroup.style.display = 'none';
+            }
+        });
+        
+        calculateBtn.addEventListener('click', calculateFrequencyDistribution);
+        generateDataBtn.addEventListener('click', generateRandomData);
+        resetBtn.addEventListener('click', resetData);
+        loadSampleData.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadSampleDataset();
+        });
+        
+        exportTableBtn.addEventListener('click', exportTableToCSV);
+        exportDataBtn.addEventListener('click', exportDataToTXT);
+        screenshotBtn.addEventListener('click', takeScreenshot);
+        
+        // Fungsi untuk memuat dataset contoh
+        function loadSampleDataset() {
+            const sampleData = [
+                65, 70, 75, 80, 85, 90, 95, 100, 105, 110,
+                65, 70, 75, 80, 85, 90, 95, 100, 105, 110,
+                65, 70, 75, 80, 85, 90, 95, 100, 105, 110,
+                115, 120, 125, 130, 135
+            ];
+            
+            dataInput.value = sampleData.join(', ');
+            showAlert(successAlert, "Data contoh berhasil dimuat!");
+        }
+        
+        // Fungsi untuk menghasilkan data acak
+        function generateRandomData() {
+            const dataTypeValue = dataType.value;
+            let min, max, dataPoints;
+            
+            switch(dataTypeValue) {
+                case 'nilai':
+                    min = 50;
+                    max = 100;
+                    dataPoints = 40;
+                    break;
+                case 'tinggi':
+                    min = 150;
+                    max = 190;
+                    dataPoints = 35;
+                    break;
+                case 'berat':
+                    min = 45;
+                    max = 90;
+                    dataPoints = 35;
+                    break;
+                case 'penjualan':
+                    min = 10;
+                    max = 200;
+                    dataPoints = 40;
+                    break;
+                default:
+                    min = 1;
+                    max = 100;
+                    dataPoints = 35;
+            }
+            
+            const randomData = [];
+            for (let i = 0; i < dataPoints; i++) {
+                // Menghasilkan data dengan distribusi normal sekitar nilai tengah
+                const mean = (min + max) / 2;
+                const stdDev = (max - min) / 6;
+                let value = Math.floor(Math.random() * (max - min + 1)) + min;
+                
+                // 70% data akan berada di sekitar mean
+                if (Math.random() < 0.7) {
+                    value = Math.floor(Math.random() * stdDev * 2) + (mean - stdDev);
+                    // Membatasi nilai dalam rentang min-max
+                    value = Math.max(min, Math.min(max, value));
+                }
+                
+                randomData.push(value);
+            }
+            
+            // Mengurutkan data untuk tampilan yang lebih baik
+            randomData.sort((a, b) => a - b);
+            dataInput.value = randomData.join(', ');
+            showAlert(successAlert, `Data acak ${dataPoints} titik berhasil dibuat!`);
+        }
+        
+        // Fungsi untuk mereset data
+        function resetData() {
+            dataInput.value = '';
+            tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;"><i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px; display: block;"></i>Data belum dihitung. Masukkan data dan klik "Hitung Distribusi Frekuensi".</td></tr>';
+            dataCountEl.textContent = '0';
+            dataRangeEl.textContent = '0';
+            classSummaryEl.textContent = '0';
+            intervalSummaryEl.textContent = '0';
+            
+            // Reset animasi counting
+            document.querySelectorAll('.counting').forEach(el => {
+                el.classList.remove('counting');
+                void el.offsetWidth; // Trigger reflow
+            });
+            
+            dataSummary.style.opacity = '0.5';
+            
+            if (frequencyChart) {
+                frequencyChart.destroy();
+                frequencyChart = null;
+            }
+            
+            showAlert(successAlert, "Data berhasil direset!");
+        }
+        
+        // Fungsi utama untuk menghitung distribusi frekuensi
+        function calculateFrequencyDistribution() {
+            // Parsing data input
+            const inputText = dataInput.value;
+            const data = parseInputData(inputText);
+            
+            // Validasi data
+            if (data.length < 30) {
+                showAlert(errorAlert, `Data harus minimal 30 nilai. Data saat ini: ${data.length} nilai.`);
+                return;
+            }
+            
+            // Menyimpan data saat ini
+            currentData = data;
+            
+            // Menentukan jumlah kelas
+            let k;
+            if (classMethod.value === 'manual') {
+                k = parseInt(classCount.value);
+                if (k < 2 || k > 20) {
+                    showAlert(errorAlert, "Jumlah kelas harus antara 2 dan 20.");
+                    return;
+                }
+            } else {
+                // Aturan Sturges: k = 1 + 3.3 * log10(n)
+                k = Math.ceil(1 + 3.3 * Math.log10(data.length));
+            }
+            
+            // Menentukan rentang data
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            
+            // Menentukan interval kelas (dibulatkan ke atas)
+            const interval = Math.ceil(range / k);
+            
+            // Membuat kelas
+            const classes = [];
+            let lowerBound = min;
+            
+            for (let i = 0; i < k; i++) {
+                const upperBound = lowerBound + interval;
+                const midPoint = (lowerBound + upperBound) / 2;
+                
+                classes.push({
+                    classNumber: i + 1,
+                    lowerBound: lowerBound,
+                    upperBound: upperBound,
+                    midPoint: midPoint,
+                    frequency: 0,
+                    relativeFrequency: 0,
+                    cumulativeFrequency: 0
+                });
+                
+                lowerBound = upperBound;
+            }
+            
+            // Menghitung frekuensi untuk setiap kelas
+            data.forEach(value => {
+                for (let i = 0; i < classes.length; i++) {
+                    const classItem = classes[i];
+                    // Untuk kelas terakhir, termasuk batas atas
+                    if (i === classes.length - 1) {
+                        if (value >= classItem.lowerBound && value <= classItem.upperBound) {
+                            classItem.frequency++;
+                            break;
+                        }
+                    } else {
+                        if (value >= classItem.lowerBound && value < classItem.upperBound) {
+                            classItem.frequency++;
+                            break;
+                        }
+                    }
+                }
+            });
+            
+            // Menghitung frekuensi relatif dan kumulatif
+            let cumulative = 0;
+            classes.forEach(classItem => {
+                classItem.relativeFrequency = ((classItem.frequency / data.length) * 100).toFixed(2);
+                cumulative += classItem.frequency;
+                classItem.cumulativeFrequency = cumulative;
+            });
+            
+            // Menyimpan hasil
+            frequencyResult = {
+                data: data,
+                classes: classes,
+                stats: {
+                    n: data.length,
+                    min: min,
+                    max: max,
+                    range: range,
+                    k: k,
+                    interval: interval
+                }
+            };
+            
+            // Menampilkan hasil
+            displayResults();
+            showAlert(successAlert, "Distribusi frekuensi berhasil dihitung!");
+        }
+        
+        // Fungsi untuk menampilkan hasil
+        function displayResults() {
+            if (!frequencyResult) return;
+            
+            const { classes, stats } = frequencyResult;
+            
+            // Update summary dengan animasi
+            dataCountEl.textContent = stats.n;
+            dataRangeEl.textContent = `${stats.min} - ${stats.max} (${stats.range})`;
+            classSummaryEl.textContent = stats.k;
+            intervalSummaryEl.textContent = stats.interval;
+            
+            // Tambah animasi counting
+            document.querySelectorAll('.counting').forEach(el => {
+                el.classList.remove('counting');
+                void el.offsetWidth; // Trigger reflow
+                el.classList.add('counting');
+            });
+            
+            dataSummary.style.opacity = '1';
+            
+            // Update tabel
+            tableBody.innerHTML = '';
+            
+            classes.forEach(classItem => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${classItem.classNumber}</td>
+                    <td>${classItem.lowerBound.toFixed(1)} - ${classItem.upperBound.toFixed(1)}</td>
+                    <td>${classItem.midPoint.toFixed(1)}</td>
+                    <td>${classItem.frequency}</td>
+                    <td>${classItem.relativeFrequency}%</td>
+                    <td>${classItem.cumulativeFrequency}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Membuat visualisasi chart
+            createChart(classes);
+        }
+        
+        // Fungsi untuk membuat chart
+        function createChart(classes) {
+            const ctx = document.getElementById('frequencyChart').getContext('2d');
+            
+            // Hancurkan chart sebelumnya jika ada
+            if (frequencyChart) {
+                frequencyChart.destroy();
+            }
+            
+            // Siapkan data untuk chart
+            const classLabels = classes.map(c => `${c.lowerBound.toFixed(1)}-${c.upperBound.toFixed(1)}`);
+            const frequencies = classes.map(c => c.frequency);
+            
+            // Tentukan warna berdasarkan tema
+            const computedStyle = getComputedStyle(document.documentElement);
+            const primaryColor = computedStyle.getPropertyValue('--primary-color').trim();
+            const accentColor = computedStyle.getPropertyValue('--accent-color').trim();
+            
+            // Buat gradien untuk chart
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, primaryColor);
+            gradient.addColorStop(1, accentColor);
+            
+            // Buat chart baru
+            frequencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: classLabels,
+                    datasets: [{
+                        label: 'Frekuensi',
+                        data: frequencies,
+                        backgroundColor: gradient,
+                        borderColor: primaryColor,
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        hoverBackgroundColor: accentColor
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: 'var(--dark-color)',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribusi Frekuensi',
+                            color: 'var(--dark-color)',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            padding: 12,
+                            cornerRadius: 6
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Frekuensi',
+                                color: 'var(--dark-color)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: 'var(--dark-color)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Interval Kelas',
+                                color: 'var(--dark-color)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: 'var(--dark-color)',
+                                maxRotation: 45
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
+        
+        // Fungsi untuk update warna chart
+        function updateChartColors() {
+            if (!frequencyChart) return;
+            
+            const ctx = frequencyChart.ctx;
+            const computedStyle = getComputedStyle(document.documentElement);
+            const primaryColor = computedStyle.getPropertyValue('--primary-color').trim();
+            const accentColor = computedStyle.getPropertyValue('--accent-color').trim();
+            
+            // Update gradien
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, primaryColor);
+            gradient.addColorStop(1, accentColor);
+            
+            // Update dataset
+            frequencyChart.data.datasets[0].backgroundColor = gradient;
+            frequencyChart.data.datasets[0].borderColor = primaryColor;
+            frequencyChart.data.datasets[0].hoverBackgroundColor = accentColor;
+            
+            // Update opsi
+            frequencyChart.options.plugins.title.color = 'var(--dark-color)';
+            frequencyChart.options.plugins.legend.labels.color = 'var(--dark-color)';
+            frequencyChart.options.scales.y.title.color = 'var(--dark-color)';
+            frequencyChart.options.scales.y.ticks.color = 'var(--dark-color)';
+            frequencyChart.options.scales.x.title.color = 'var(--dark-color)';
+            frequencyChart.options.scales.x.ticks.color = 'var(--dark-color)';
+            
+            frequencyChart.update();
+        }
+        
+        // Fungsi untuk parsing data input
+        function parseInputData(inputText) {
+            // Mengganti berbagai pemisah dengan koma
+            const normalized = inputText
+                .replace(/\s+/g, ',')
+                .replace(/;/g, ',')
+                .replace(/\n/g, ',');
+            
+            // Memisahkan dengan koma dan mengkonversi ke angka
+            const numbers = normalized
+                .split(',')
+                .map(item => parseFloat(item.trim()))
+                .filter(item => !isNaN(item));
+            
+            return numbers;
+        }
+        
+        // Fungsi untuk menampilkan alert
+        function showAlert(alertElement, message) {
+            // Update pesan alert
+            const messageSpan = alertElement.querySelector('span');
+            messageSpan.textContent = message;
+            
+            alertElement.style.display = 'flex';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Fungsi untuk export tabel ke CSV
+        function exportTableToCSV() {
+            if (!frequencyResult) {
+                showAlert(errorAlert, "Tidak ada data untuk diexport. Hitung distribusi frekuensi terlebih dahulu.");
+                return;
+            }
+            
+            const { classes, stats } = frequencyResult;
+            let csvContent = "Kelas,Interval,Nilai Tengah,Frekuensi,Frekuensi Relatif (%),Frekuensi Kumulatif\n";
+            
+            classes.forEach(classItem => {
+                csvContent += `${classItem.classNumber},"${classItem.lowerBound.toFixed(1)}-${classItem.upperBound.toFixed(1)}",${classItem.midPoint.toFixed(1)},${classItem.frequency},${classItem.relativeFrequency},${classItem.cumulativeFrequency}\n`;
+            });
+            
+            // Tambahkan ringkasan statistik
+            csvContent += `\nRingkasan Statistik\n`;
+            csvContent += `Jumlah Data (n),${stats.n}\n`;
+            csvContent += `Nilai Minimum,${stats.min}\n`;
+            csvContent += `Nilai Maksimum,${stats.max}\n`;
+            csvContent += `Rentang Data,${stats.range}\n`;
+            csvContent += `Jumlah Kelas (k),${stats.k}\n`;
+            csvContent += `Interval Kelas,${stats.interval}\n`;
+            
+            downloadFile(csvContent, 'distribusi-frekuensi.csv', 'text/csv');
+            showAlert(successAlert, "Tabel berhasil diexport ke CSV!");
+        }
+        
+        // Fungsi untuk export data ke TXT
+        function exportDataToTXT() {
+            if (!frequencyResult) {
+                showAlert(errorAlert, "Tidak ada data untuk diexport. Hitung distribusi frekuensi terlebih dahulu.");
+                return;
+            }
+            
+            const { data, stats } = frequencyResult;
+            
+            let txtContent = `DATA STATISTIK - DISTRIBUSI FREKUENSI\n`;
+            txtContent += `======================================\n\n`;
+            txtContent += `Jenis Data: ${dataType.options[dataType.selectedIndex].text}\n`;
+            txtContent += `Jumlah Data: ${stats.n}\n`;
+            txtContent += `Nilai Minimum: ${stats.min}\n`;
+            txtContent += `Nilai Maksimum: ${stats.max}\n`;
+            txtContent += `Rentang Data: ${stats.range}\n`;
+            txtContent += `Jumlah Kelas: ${stats.k}\n`;
+            txtContent += `Interval Kelas: ${stats.interval}\n\n`;
+            txtContent += `Data:\n${data.join(', ')}\n\n`;
+            txtContent += `Dibuat pada: ${new Date().toLocaleString('id-ID')}\n`;
+            
+            downloadFile(txtContent, 'data-statistik.txt', 'text/plain');
+            showAlert(successAlert, "Data berhasil diexport ke TXT!");
+        }
+        
+        // Fungsi untuk mengambil screenshot
+        function takeScreenshot() {
+            const element = document.querySelector('.results-section');
+            
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'distribusi-frekuensi-screenshot.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                showAlert(successAlert, "Screenshot berhasil diambil dan diunduh!");
+            });
+        }
+        
+        // Fungsi untuk mendownload file
+        function downloadFile(content, fileName, fileType) {
+            const blob = new Blob([content], { type: fileType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
